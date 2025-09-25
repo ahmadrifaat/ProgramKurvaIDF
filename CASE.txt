@@ -1,0 +1,21 @@
+CASE 
+WHEN "PENUTUP_LA" = 'Jalan' THEN
+WHEN "PENUTUP_LA" = 'Kanal' THEN
+WHEN "PENUTUP_LA" = 'Permukiman' THEN
+WHEN "PENUTUP_LA" = 'Rawa' THEN
+WHEN "PENUTUP_LA" = 'RTH' THEN
+WHEN "PENUTUP_LA" = 'Saluran Air' THEN
+WHEN "PENUTUP_LA" = 'Sawah' THEN
+WHEN "PENUTUP_LA" = 'Semak Belukar' THEN
+WHEN "PENUTUP_LA" = 'Tanah Terbuka' THEN
+WHEN "PENUTUP_LA" = 'Tegalan' THEN
+WHEN "PENUTUP_LA" = 'Tempat Kegiatan' THEN
+WHEN "PENUTUP_LA" = 'Waduk' THEN
+END
+
+ncols        3162
+nrows        3162
+xllcorner    769490.801100000041
+yllcorner    9425720.830800000578
+dx           3.952561353574
+dy           4.680042757748
