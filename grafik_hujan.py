@@ -3,35 +3,29 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-# --- Konfigurasi ---
-# GANTI NAMA FILE INI SESUAI KEBUTUHAN (ABM, SCS, atau PRD)
-NAMA_FILE_CSV = 'PRD_FIXED.csv'
+#ganti 
+NAMA_FILE_CSV = 'PRD_FIXED.csv' 
 KOLOM_X = 'time'
-KOLOM_Y = 'intensity' # <-- Pastikan nama kolom intensitas sesuai dengan di CSV
+KOLOM_Y = 'intensity'
 
 # Judul dan label untuk grafik
 JUDUL_GRAFIK = 'Peaked Rainfall Distribution'
 LABEL_X = 'Waktu (detik)' 
 LABEL_Y = 'Intensitas (mm/jam)'
-# --------------------
 
-# --- KONSTANTA BARU UNTUK PERHITUNGAN VOLUME ---
-# Total area DEM 3162x3162 (dari analisis kita sebelumnya)
-# (3162 sel * 3162 sel) * (3.95256... m * 4.68004... m)
+
+# luas area perhitungan
 TOTAL_AREA_M2 = 113293415.29 
 # -----------------------------------------------
 
 
 def buat_grafik_dan_hitung_volume():
-    """
-    Fungsi untuk membaca CSV, menghitung AUC, Kedalaman, Volume, dan membuat plot.
-    """
     try:
-        # 1. Membaca data dari file CSV
+        # 1. baca dari csv
         print(f"Membaca file data '{NAMA_FILE_CSV}'...")
         data = pd.read_csv(NAMA_FILE_CSV)
         
-        # Ganti nama kolom 'intensity' jika perlu
+        # ganti nama kolom (opsional)
         if 'intensity' in data.columns and KOLOM_Y not in data.columns:
             data = data.rename(columns={'intensity': KOLOM_Y})
             
@@ -44,21 +38,21 @@ def buat_grafik_dan_hitung_volume():
         y_values = data[KOLOM_Y]
         print("Data berhasil dimuat.")
 
-        # 3. MENGHITUNG LUAS AREA DAN VOLUME
+        # 3. luas area dan volume
         # -----------------------------------------------------------------
         print("\n" + "="*50)
         print("HASIL PERHITUNGAN VERIFIKASI SISI A (INPUT HUJAN)")
         
-        # Langkah 1: Hitung Luas Area di bawah kurva (unit: mm/jam * s)
+        # area under curve
         auc_mm_hr_s = np.trapz(y_values, x_values)
         print(f"Langkah 1: AUC (Intensitas * Waktu) = {auc_mm_hr_s:,.2f} [mm/jam * s]")
         
-        # Langkah 2: Konversi ke Total Kedalaman Hujan (unit: mm)
+        # konversi satuan
         # (mm/jam * s) / (3600 s/jam) = mm
         total_kedalaman_mm = auc_mm_hr_s / 3600.0
         print(f"Langkah 2: Total Kedalaman Hujan     = {total_kedalaman_mm:,.4f} [mm]")
         
-        # Langkah 3: Konversi ke Total Volume (unit: m^3)
+        # konversi satuan
         # (mm / 1000 mm/m) * (Total Area m^2) = m^3
         total_volume_m3 = (total_kedalaman_mm / 1000.0) * TOTAL_AREA_M2
         print(f"Langkah 3: TOTAL VOLUME (SISI A)   = {total_volume_m3:,.2f} [m³]")
@@ -68,14 +62,14 @@ def buat_grafik_dan_hitung_volume():
         print("Membuat grafik...")
         plt.figure(figsize=(12, 8))
         
-        # Plot garis intensitas
+        # grafik intensitas
         plt.plot(x_values, y_values, linestyle='-', marker=None, color='blue', label='Intensitas Hujan')
         
-        # Mengisi area di bawah kurva
+        # arsir area under curve
         plt.fill_between(x_values, y_values, color='lightblue', alpha=0.5, 
                          label=f'AUC = {auc_mm_hr_s:,.2f} (mm/jam*s)')
 
-        # Menambahkan Judul dan Label
+        # judul + tabel keterangan
         judul_lengkap = (
             f"{JUDUL_GRAFIK}\n"
             f"Total Kedalaman (Python): {total_kedalaman_mm:,.4f} mm\n"
@@ -90,7 +84,7 @@ def buat_grafik_dan_hitung_volume():
         plt.legend()
         plt.tight_layout()
         
-        # Menyimpan grafik sebagai file
+        # save gambar grafik
         nama_file_output = f"HASIL_{JUDUL_GRAFIK}.png"
         plt.savefig(nama_file_output)
         print(f"Grafik selesai. Disimpan sebagai '{nama_file_output}'")
@@ -101,6 +95,7 @@ def buat_grafik_dan_hitung_volume():
     except Exception as e:
         print(f"Terjadi error: {e}")
 
-# Menjalankan fungsi utama
+# run fungsi main
 if __name__ == "__main__":
     buat_grafik_dan_hitung_volume()
+
